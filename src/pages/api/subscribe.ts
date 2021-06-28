@@ -5,6 +5,7 @@ import { stripe } from "../../services/stripe";
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === 'POST') {
         const session = await getSession({ req })
+
         const stripeCustomer = await stripe.customers.create({
             email: session.user.email,
         })
@@ -14,12 +15,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             payment_method_types: ['card'],
             billing_address_collection: 'required',
             line_items: [
-                {price: 'price_1J5al0DGE7Sp6H3eg3uoMmu2', quantity: 1}
+                {price: 'price_1J5aB8G6Ma9EVJYlqs4d1K8V', quantity: 1}
             ],
             mode: 'subscription',
             allow_promotion_codes: true,
-            success_url: 'http://localhost:3000/posts',
-            cancel_url: 'http://localhost:3000',
+            success_url: process.env.STRIPE_SUCCESS_URL,
+            cancel_url: process.env.STRIPE_CANCEL_URL,
         })
 
         return res.status(200).json({ sessionId: stripeCheckoutSession.id})
