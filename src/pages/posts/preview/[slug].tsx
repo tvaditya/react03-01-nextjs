@@ -1,5 +1,5 @@
 // name with brackets when pages are dynamic
-import {GetStaticProps} from "next";
+import {GetStaticPaths, GetStaticProps} from "next";
 import Link from 'next/link';
 import {getPrismicClient} from "../../../services/prismic";
 import Head from 'next/head';
@@ -52,9 +52,14 @@ export default function PostPreview({ post }: PostPreviewProps) {
     )
 }
 
-export const getStaticPaths = () => {
+export const getStaticPaths: GetStaticPaths = async () => {
     return {
-        paths: [],
+        paths: [
+            { params: {
+                slug: 'mapas-com-react-usando-leaflet',
+                }
+            }
+        ],
         fallback: 'blocking',
     }
 }
@@ -80,6 +85,7 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
     return {
         props: {
             post,
-        }
+        },
+        redirect: 60 * 30,
     }
 }
